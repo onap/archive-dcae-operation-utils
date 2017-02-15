@@ -1,0 +1,13 @@
+
+package $packageName;
+
+import org.openecomp.entity.EcompOperationEnum;
+
+public enum ${name}OperationEnum implements EcompOperationEnum {
+<% 
+def last 
+operations.each { n, v -> last = n }
+operations.each { n, v -> %>
+  $n${n==last ? ";" : ","}\
+<% } %>
+}

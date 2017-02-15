@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: operation-utils
+Bundle-SymbolicName: operation-utils
+Bundle-Version: 0.1.0.qualifier
+Export-Package: org.openecomp.entity,
+ org.openecomp.logger,
+ org.openecomp.utils

@@ -1,0 +1,18 @@
+
+package $packageName;
+
+import com.att.eelf.i18n.EELFResourceManager;
+import org.openecomp.logger.EcompMessageEnum;
+
+public enum ${name}MessageEnum implements EcompMessageEnum {
+<% 
+def last 
+messages.each { n, v -> last = n }
+messages.each { n, v -> %>
+  $n${n==last ? ";" : ","}\
+<% } %>
+
+	static {
+		EELFResourceManager.loadMessageBundle("${packageName}.$name");
+	}
+}

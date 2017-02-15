@@ -1,0 +1,36 @@
+GENERAL_ERROR:
+  errorCode: ECOMP-GENERAL-ERROR-5403
+  messageFormat: '{0}'
+  resolution: Please check other logs for more detailed info
+  description: General error
+GENERAL_INFO:
+  errorCode: ECOMP-GENERAL-INFO-5401
+  messageFormat: '{0}'
+  resolution: Please check other logs for more detailed info
+  description: General info
+GENERAL_WARNING:
+  errorCode: ECOMP-GENERAL-WARNING-5402
+  messageFormat: '{0}'
+  resolution: Please check other logs for more detailed info
+  description: General warning
+METRICS_END:
+  errorCode: ECOMP-GENERAL-5404
+  messageFormat: Exiting method
+  resolution: No resolution needed
+  description: Exiting method
+AUDIT_END:
+  errorCode: ECOMP-GENERAL-5404
+  messageFormat: Exiting method
+  resolution: No resolution needed
+  description: Exiting method
+AUDIT_BEGIN:
+  errorCode: ECOMP-GENERAL-5403
+  messageFormat: Entering method
+  resolution: No resolution needed
+  description: Entering method
+METRICS_BEGIN:
+  errorCode: ECOMP-GENERAL-5403
+  messageFormat: Entering method
+  resolution: No resolution needed
+  description: Entering method
+

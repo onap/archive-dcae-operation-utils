@@ -1,0 +1,9 @@
+<% 
+  messages.each { n, v -> 
+%>
+$n=\\
+  $v.errorCode|\\
+  $v.messageFormat|\\
+  $v.resolution|\\
+  $v.description
+<% } %>

@@ -3,7 +3,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.openecomp.dcae.operation.utils</groupId>
 	<artifactId>operation-utils</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -11,42 +10,21 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 	<nexusproxy>https://nexus.onap.org</nexusproxy></properties>
 
-	
-<build>
+
+	<build>
 		<plugins>
-       <!-- site maven plugin -->
-       <plugin>
-           <groupId>org.apache.maven.plugins</groupId>
-           <artifactId>maven-site-plugin</artifactId>
-           <version>3.6</version>
-           <dependencies>
-             <dependency>
-               <groupId>org.apache.maven.wagon</groupId>
-               <artifactId>wagon-webdav-jackrabbit</artifactId>
-               <version>2.10</version>
-             </dependency>
-           </dependencies>
-       </plugin>
-    
-			<!-- blackduck maven plugin -->
+			<!-- site maven plugin -->
 			<plugin>
-				<groupId>com.blackducksoftware.integration</groupId>
-				<artifactId>hub-maven-plugin</artifactId>
-				<version>1.4.0</version>
-				<inherited>false</inherited>
-				<configuration>
-					<hubProjectName>${project.name}</hubProjectName>
-					<outputDirectory>${project.basedir}</outputDirectory>
-				</configuration>
-				<executions>
-					<execution>
-						<id>create-bdio-file</id>
-						<phase>package</phase>
-						<goals>
-							<goal>createHubOutput</goal>
-						</goals>
-					</execution>
-				</executions>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.6</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-webdav-jackrabbit</artifactId>
+						<version>2.10</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 
 			<plugin>
@@ -61,30 +39,69 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.10</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/main/java</source>
+								<source>src/main/java-gen</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-resource</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>add-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>src/main/resources</directory>
+								</resource>
+								<resource>
+									<directory>src/main/resources-gen</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+
+			</plugin>
 		</plugins>
 	</build>
 
 	<dependencies>
 		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.att.eelf</groupId>
 			<artifactId>eelf-core</artifactId>
-			<version>0.0.1</version>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.6</version>
 		</dependency>
-
-
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
 			<version>1.15</version>
 		</dependency>
-
-
-
 		<dependency>
 			<groupId>org.openecomp.ncomp.utils</groupId>
 			<artifactId>ncomp-utils-java</artifactId>
@@ -97,10 +114,10 @@
 		</dependency>
 	</dependencies>
 
-	  <parent>
-	        <groupId>org.openecomp.ncomp.maven</groupId>
-	        <artifactId>ncomp-maven-base</artifactId>
-	        <version>1.1.0-SNAPSHOT</version>
-			<relativePath>../../dcae-org.openecomp.ncomp.maven/ncomp-maven-base</relativePath>
-	  </parent>
+	<parent>
+		<groupId>org.openecomp.ncomp.maven</groupId>
+		<artifactId>ncomp-maven-base</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+		<relativePath>../../dcae-org.openecomp.ncomp.maven/ncomp-maven-base</relativePath>
+	</parent>
 </project>

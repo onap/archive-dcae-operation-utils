@@ -42,51 +42,62 @@ import org.openecomp.ncomp.utils.PropertyUtil;
 import org.openecomp.ncomp.webservice.utils.FileUtils;
 
 public class YamlToJava {
-	
-//	package org.openecomp.operation.logging.usecases;
-//
-//	import org.openecomp.logger.EcompMessageEnum;
-//	import com.att.eelf.i18n.EELFResourceManager;
-//
-//	public enum MyMessageEnum implements EcompMessageEnum {
-//		// Api Handler Messages
-//		FOOBAR;
-//
-//		static {
-//			EELFResourceManager.loadMessageBundle("foobar");
-//		}
-//	}
-	
+
+	// package org.openecomp.operation.logging.usecases;
+	//
+	// import org.openecomp.logger.EcompMessageEnum;
+	// import com.att.eelf.i18n.EELFResourceManager;
+	//
+	// public enum MyMessageEnum implements EcompMessageEnum {
+	// // Api Handler Messages
+	// FOOBAR;
+	//
+	// static {
+	// EELFResourceManager.loadMessageBundle("foobar");
+	// }
+	// }
+
+	static public void convert(String yamlFileName, String outputDir, String packageName) {
+		convert(yamlFileName, outputDir, outputDir, packageName);
+	}
+
 	@SuppressWarnings("unchecked")
-	static public void convert(String yamlFileName, String outputSourceRootDir, String packageName) {
+	static public void convert(String yamlFileName, String propertiesOutputDirectory, String enumOutputDirectory,
+			String packageName) {
 		try {
-			if (! (new File(yamlFileName).exists())) {
+			System.out.println("Enterting YAML Convert)");
+			if (!(new File(yamlFileName).exists())) {
 				System.err.println(yamlFileName + " does not exists");
 				return;
 			}
 			DumperOptions options = new DumperOptions();
 			options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 			Yaml y = new Yaml(options);
-			Map<String,Object> m = (Map<String, Object>) y.load(FileUtils.filename2stream(yamlFileName, null));
+			Map<String, Object> m = (Map<String, Object>) y.load(FileUtils.filename2stream(yamlFileName, null));
 			File f = new File(yamlFileName);
 			String name = f.getName().replace(".yaml", "");
 			m.put("name", name);
 			m.put("packageName", packageName);
-			String ofile1 = outputSourceRootDir + "/" + name + ".properties";
+			String resourcePath = packageName.replace('.', '/');
+			m.put("resourcePath", resourcePath);
+			String ofile1 = propertiesOutputDirectory + "/" + name + ".properties";
+			System.out.println("Properties file path => " + ofile1);
 			OutputStreamWriter w;
 			SimpleTemplateEngine engine = new SimpleTemplateEngine();
 			if (m.containsKey("messages")) {
 				w = FileUtils.filename2writer(ofile1);
 				w.append(engine.createTemplate(getTemplate("properties_template")).make(m).toString());
 				w.close();
-				String ofile2 = outputSourceRootDir + "/" + name + "MessageEnum.java";
+				String ofile2 = enumOutputDirectory + "/" + name + "MessageEnum.java";
+				System.out.println("Message Enum  file path => " + ofile2);
 				w = FileUtils.filename2writer(ofile2);
 				w.append(engine.createTemplate(getTemplate("messageEnum.java_template")).make(m).toString());
 				w.close();
 			}
 			if (m.containsKey("operations")) {
-				String ofile3 = outputSourceRootDir + "/" + name + "OperationEnum.java";
+				String ofile3 = enumOutputDirectory + "/" + name + "OperationEnum.java";
 				w = FileUtils.filename2writer(ofile3);
+				System.out.println("Operation Enum  file path => " + ofile3);
 				w.append(engine.createTemplate(getTemplate("operationEnum.java_template")).make(m).toString());
 				w.close();
 			}
@@ -104,31 +115,63 @@ public class YamlToJava {
 		ByteArrayOutputStream o = new ByteArrayOutputStream();
 		FileUtils.copyStream(in, o);
 		return o.toString();
-}
+	}
 
 	public static void main(String[] args) throws IOException {
 
-		Properties props = new Properties();
-		String pname = "GenericMessages.properties";
-		String fname = "src/main/resources/GenericMessages.yaml";
-		props.load(YamlToJava.class.getClassLoader().getResourceAsStream(pname));
+		for (int i = 0; i < args.length; i++) {
+			System.out.println(" Argument " + Integer.toString(i) + " ==>  " + args[i]);
+		}
+
+		switch (args.length) {
+		case 1:
+			String baseDir = findBaseDir(args[0]);
+			Map<String, Object> m = file2yaml(args[0]);
+			String javaDest = (String) (m.containsKey("java-root") ? m.get("java-root") : "src/main/java-gen");
+			String resourcesDest = (String) (m.containsKey("resources-root") ? m.get("resources-root")
+					: "src/main/resources-gen");
+			if (! javaDest.startsWith("/")) javaDest = baseDir + "/" + javaDest;
+			if (! resourcesDest.startsWith("/")) resourcesDest = baseDir + "/" + resourcesDest;
+			String packageName = (String) m.get("package-name");
+			if (packageName == null) {
+				System.err.println("No package-name attribute in: " + args[0]);
+				System.exit(2);
+			}
+			String packageDir = "/" + packageName.replace(".", "/");
+			convert(args[0], resourcesDest + packageDir, javaDest + packageDir, packageName);
+			break;
+		case 4:
+			convert(args[0], args[1], args[2], args[3]);
+			break;
+		case 5:
+			convert(args[1], args[2], args[3], args[4]);
+			break;
+		default:
+			System.err.println("Invalid arguments, expected --> yamlFileName");
+			System.exit(2);
+		}
+	}
+
+	private static String findBaseDir(String filename) {
+		File f = new File(filename);
+		f = f.getParentFile();
+		while (f != null) {
+			File pom = new File(f,"pom.xml");
+			if (pom.exists()) return f.getAbsolutePath();
+			f = f.getParentFile();
+		}
+		return ".";
+	}
+
+	@SuppressWarnings("unchecked")
+	private static Map<String, Object> file2yaml(String yamlFileName) {
+		if (!(new File(yamlFileName).exists())) {
+			System.err.println(yamlFileName + " does not exists");
+			System.exit(2);
+		}
 		DumperOptions options = new DumperOptions();
 		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 		Yaml y = new Yaml(options);
-		JSONObject j = new JSONObject();
-		for (Object k : props.keySet()) {
-			String a[] = props.getProperty((String) k).split("\\|");
-			JSONObject j1 = new JSONObject();
-			j.put((String) k, j1);
-			j1.put("errorCode", a[0]);
-			j1.put("messageFormat", a[1]);
-			j1.put("resolution", a[2]);
-			j1.put("description", a[3].trim());
-		}
-
-		Object data = y.load(j.toString());
-		OutputStreamWriter w = FileUtils.filename2writer(fname);
-		w.append(y.dump(data) + "\n");
-		w.close();
+		return (Map<String, Object>) y.load(FileUtils.filename2stream(yamlFileName, null));
 	}
 }

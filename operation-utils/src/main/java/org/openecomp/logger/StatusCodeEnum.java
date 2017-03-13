@@ -21,18 +21,7 @@
 	
 package org.openecomp.logger;
 
-import com.att.eelf.i18n.EELFResourceManager;
-
-public enum GenericMessageEnum implements EcompMessageEnum {
-	GENERAL_INFO,
-	GENERAL_WARNING,
-	GENERAL_ERROR,
-	GENERAL_EXCEPTION,
-	AUDIT_BEGIN,
-	AUDIT_END,
-	METRICS_BEGIN,
-	METRICS_END;
-	static {
-		EELFResourceManager.loadMessageBundle("GenericMessages");
-	}
+public enum StatusCodeEnum {
+     COMPLETE,
+    ERROR
 }

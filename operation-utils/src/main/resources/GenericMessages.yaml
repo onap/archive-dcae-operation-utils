@@ -1,36 +1,65 @@
-GENERAL_ERROR:
-  errorCode: ECOMP-GENERAL-ERROR-5403
-  messageFormat: '{0}'
-  resolution: Please check other logs for more detailed info
-  description: General error
-GENERAL_INFO:
-  errorCode: ECOMP-GENERAL-INFO-5401
-  messageFormat: '{0}'
-  resolution: Please check other logs for more detailed info
-  description: General info
-GENERAL_WARNING:
-  errorCode: ECOMP-GENERAL-WARNING-5402
-  messageFormat: '{0}'
-  resolution: Please check other logs for more detailed info
-  description: General warning
-METRICS_END:
-  errorCode: ECOMP-GENERAL-5404
-  messageFormat: Exiting method
-  resolution: No resolution needed
-  description: Exiting method
-AUDIT_END:
-  errorCode: ECOMP-GENERAL-5404
-  messageFormat: Exiting method
-  resolution: No resolution needed
-  description: Exiting method
-AUDIT_BEGIN:
-  errorCode: ECOMP-GENERAL-5403
-  messageFormat: Entering method
-  resolution: No resolution needed
-  description: Entering method
-METRICS_BEGIN:
-  errorCode: ECOMP-GENERAL-5403
-  messageFormat: Entering method
-  resolution: No resolution needed
-  description: Entering method
+package-name: org.openecomp.logger
+java-root: src/main/java-gen
+resources-root: src/main/resources-gen
 
+messages:
+  ECOMP-GENERAL-EXCEPTION:
+    errorCode: 5404W
+    messageFormat: "{0}"
+    resolution: Please check other logs for more detailed info
+    description: General exception
+  ECOMP-GENERAL-ERROR:
+    errorCode: 5403E
+    messageFormat: "{0}"
+    resolution: Please check other logs for more detailed info
+    description: General error
+  ECOMP-GENERAL-INFO:
+    errorCode: 5401I
+    messageFormat: "{0}"
+    resolution: Please check other logs for more detailed info
+    description: General info
+  ECOMP-GENERAL-WARNING:
+    errorCode: 5402W
+    messageFormat: "{0}"
+    resolution: Please check other logs for more detailed info
+    description: General warning
+  ECOMP-REMOTE-CALL-OK:
+    errorCode: 2000I
+    messageFormat: ""
+    resolution: No resolution needed
+    description: Remote Call Succeess
+  ECOMP-REQUEST-OK:
+    errorCode: 2000I
+    messageFormat: ""
+    resolution: No resolution needed
+    description: Request Success
+  ECOMP-REMOTE-CALL-ERROR:
+    errorCode: 4000W
+    messageFormat: "{0}"
+    resolution: No resolution needed
+    description: Remote Call Failed
+  ECOMP-REQUEST-ERROR:
+    errorCode: 4000I
+    messageFormat: "{0}"
+    resolution: No resolution needed
+    description: Request Failed
+  ECOMP-MISSING-REQUESTID:
+    errorCode: 3401W
+    messageFormat: Missing request id from {0}
+    resolution: Need to get north bound entity to provide request ID per ECOMP logging requirements
+    description: Got a north bound request that was missing a request ID.
+  ECOMP-LOGGER-NON-EMPTY-STACK:
+    errorCode: 4401W
+    messageFormat: ""
+    resolution: Development bug.
+    description: Component recorded an Audit End with an non empty stack  
+  ECOMP-LOGGER-POP-ON-EMPTY-STACK:
+    errorCode: 4402W
+    messageFormat: ""
+    resolution: Development bug.
+    description: Component performed a Pop on empty stack 
+  ECOMP-LOGGER-TOP-ON-EMPTY-STACK:
+    errorCode: 4403W
+    messageFormat: ""
+    resolution: Development bug.
+    description: Component performed a Top on empty stack 

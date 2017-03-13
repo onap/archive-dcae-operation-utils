@@ -9,10 +9,10 @@ public enum ${name}MessageEnum implements EcompMessageEnum {
 def last 
 messages.each { n, v -> last = n }
 messages.each { n, v -> %>
-  $n${n==last ? ";" : ","}\
+  ${n.replace('-','_')}${n==last ? ";" : ","}\
 <% } %>
 
 	static {
-		EELFResourceManager.loadMessageBundle("${packageName}.$name");
+		EELFResourceManager.loadMessageBundle("${resourcePath}/$name");
 	}
 }

@@ -1,8 +1,8 @@
 <% 
   messages.each { n, v -> 
 %>
-$n=\\
-  $v.errorCode|\\
+${n.replace('-','_')}=\\
+  $n-$v.errorCode|\\
   $v.messageFormat|\\
   $v.resolution|\\
   $v.description

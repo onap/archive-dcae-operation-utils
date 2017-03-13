@@ -8,6 +8,19 @@ public enum ${name}OperationEnum implements EcompOperationEnum {
 def last 
 operations.each { n, v -> last = n }
 operations.each { n, v -> %>
-  $n${n==last ? ";" : ","}\
-<% } %>
+  ${n.replaceAll('[-&@#:]','_')}("$n")${n==last ? "" : ","}\
+<% } %> ; 
+
+
+	private String n;
+	
+	private ${name}OperationEnum(String n) {
+		this.n = n;
+	}
+
+	@Override
+	public String toString() {
+		return n;
+	}
+
 }

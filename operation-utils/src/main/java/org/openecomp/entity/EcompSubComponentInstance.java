@@ -47,7 +47,8 @@ public class EcompSubComponentInstance {
 		return uuid;
 	}
 
-	public static void initialize() {
+	public static void initialize(String instanceID) {
+		uuid = instanceID;
 		if (serverIP == null || serverName == null || ("").equals(serverIP) || ("").equals(serverName)) {
 			try {
 				InetAddress server = InetAddress.getLocalHost();
@@ -59,5 +60,9 @@ public class EcompSubComponentInstance {
 				serverName = "";
 			}
 		}
+	}
+
+	public static void initialize() {
+		initialize(UUID.randomUUID().toString());
 	}
 }

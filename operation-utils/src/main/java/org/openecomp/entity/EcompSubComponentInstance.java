@@ -27,6 +27,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.openecomp.ncomp.utils.SecurityUtils;
+
 public class EcompSubComponentInstance {
 	private static final Logger logger = Logger.getLogger(EcompSubComponentInstance.class.getName());
 
@@ -51,10 +53,9 @@ public class EcompSubComponentInstance {
 		uuid = instanceID;
 		if (serverIP == null || serverName == null || ("").equals(serverIP) || ("").equals(serverName)) {
 			try {
-				InetAddress server = InetAddress.getLocalHost();
-				serverIP = server.getHostAddress();
-				serverName = server.getCanonicalHostName();
-			} catch (UnknownHostException e) {
+				serverIP = SecurityUtils.getHostAddress();
+				serverName = SecurityUtils.getCanonicalHostName();
+			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Could not get local hostname", e);
 				serverIP = "";
 				serverName = "";

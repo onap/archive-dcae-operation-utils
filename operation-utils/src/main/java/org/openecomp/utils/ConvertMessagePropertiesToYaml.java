@@ -40,7 +40,13 @@ public class ConvertMessagePropertiesToYaml {
 		Properties props = new Properties();
 		String pname = "GenericMessages.properties";
 		String fname = "src/main/resources/GenericMessages.yaml";
-		props.load(ConvertMessagePropertiesToYaml.class.getClassLoader().getResourceAsStream(pname));
+		InputStream in = null;
+		try {
+			in = ConvertMessagePropertiesToYaml.class.getClassLoader().getResourceAsStream(pname);
+			props.load(in);
+		} finally {
+			if (in != null) in.close();
+		}
 		DumperOptions options = new DumperOptions();
 		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 		Yaml y = new Yaml(options);

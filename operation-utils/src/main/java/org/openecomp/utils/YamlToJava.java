@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  */
-	
+
 package org.openecomp.utils;
 
 import java.io.ByteArrayOutputStream;
@@ -39,6 +39,7 @@ import groovy.lang.Writable;
 import groovy.text.SimpleTemplateEngine;
 
 import org.openecomp.ncomp.utils.PropertyUtil;
+import org.openecomp.ncomp.utils.SecurityUtils;
 import org.openecomp.ncomp.webservice.utils.FileUtils;
 
 public class YamlToJava {
@@ -66,6 +67,7 @@ public class YamlToJava {
 			String packageName) {
 		try {
 			System.out.println("Enterting YAML Convert)");
+			yamlFileName = SecurityUtils.safeFileName(yamlFileName);
 			if (!(new File(yamlFileName).exists())) {
 				System.err.println(yamlFileName + " does not exists");
 				return;
@@ -108,13 +110,19 @@ public class YamlToJava {
 	}
 
 	private static String getTemplate(String res) throws IOException {
-		InputStream in = YamlToJava.class.getClassLoader().getResourceAsStream(res);
-		if (in == null) {
-			throw new RuntimeException("Unable to find resource: " + res);
+		InputStream in = null;
+		try {
+			in = YamlToJava.class.getClassLoader().getResourceAsStream(res);
+			if (in == null) {
+				throw new RuntimeException("Unable to find resource: " + res);
+			}
+			ByteArrayOutputStream o = new ByteArrayOutputStream();
+			FileUtils.copyStream(in, o);
+			return o.toString();
+		} finally {
+			if (in != null)
+				in.close();
 		}
-		ByteArrayOutputStream o = new ByteArrayOutputStream();
-		FileUtils.copyStream(in, o);
-		return o.toString();
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -130,8 +138,10 @@ public class YamlToJava {
 			String javaDest = (String) (m.containsKey("java-root") ? m.get("java-root") : "src/main/java-gen");
 			String resourcesDest = (String) (m.containsKey("resources-root") ? m.get("resources-root")
 					: "src/main/resources-gen");
-			if (! javaDest.startsWith("/")) javaDest = baseDir + "/" + javaDest;
-			if (! resourcesDest.startsWith("/")) resourcesDest = baseDir + "/" + resourcesDest;
+			if (!javaDest.startsWith("/"))
+				javaDest = baseDir + "/" + javaDest;
+			if (!resourcesDest.startsWith("/"))
+				resourcesDest = baseDir + "/" + resourcesDest;
 			String packageName = (String) m.get("package-name");
 			if (packageName == null) {
 				System.err.println("No package-name attribute in: " + args[0]);
@@ -153,11 +163,12 @@ public class YamlToJava {
 	}
 
 	private static String findBaseDir(String filename) {
-		File f = new File(filename);
+		File f = new File(SecurityUtils.safeFileName(filename));
 		f = f.getParentFile();
 		while (f != null) {
-			File pom = new File(f,"pom.xml");
-			if (pom.exists()) return f.getAbsolutePath();
+			File pom = new File(f, "pom.xml");
+			if (pom.exists())
+				return f.getAbsolutePath();
 			f = f.getParentFile();
 		}
 		return ".";
@@ -165,6 +176,7 @@ public class YamlToJava {
 
 	@SuppressWarnings("unchecked")
 	private static Map<String, Object> file2yaml(String yamlFileName) {
+		yamlFileName = SecurityUtils.safeFileName(yamlFileName);
 		if (!(new File(yamlFileName).exists())) {
 			System.err.println(yamlFileName + " does not exists");
 			System.exit(2);
